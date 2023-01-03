@@ -1,0 +1,6 @@
+Classification:
+    run_glue.py
+
+Generation:
+    summarization: BartForConditionalGeneration, T5ForConditionalGeneration
+    generation: GPT2
