@@ -449,3 +449,38 @@ betas = torch.sum(x * y, dim=-1)
 get_logits()
 init_weights()
 ```
+
+# Retrieval-Free Knowledge-Grounded Dialogue Response Generation with Adapters
+
+### GPT2+adapter
+```
+# adapter
+class Adapter(nn.Module):
+    def __init__(self, config, dneck):
+        super().__init__()
+        nx = config.n_embd if hasattr(config, "n_embd") else config.d_model
+        self.ln = nn.LayerNorm(nx, eps=config.layer_norm_epsilon) if hasattr(config, "layer_norm_epsilon") else nn.LayerNorm(nx)
+        self.we = nn.Linear(nx, dneck, bias=False)
+        self.wd = nn.Linear(dneck, nx, bias=False)
+
+    def forward(self, x):
+        a = self.we(self.ln(x))
+        m = self.wd(F.relu(a))
+        output = x + m
+        return output
+
+# GPT2
+hidden_states = hidden_states + feed_forward_hidden_states
+
+if self.kadapter is not None:
+    if self.num_kadapter == 1:
+        hidden_states = self.kadapter(hidden_states)
+    else:
+        assert experts is not None
+        hidden_states_list = torch.stack([self.kadapter[l](hidden_states) for l in range(self.num_kadapter)], dim=1)
+        hsl_0, hsl_1, hsl_2, hsl_3 = hidden_states_list.shape
+        hidden_states = torch.bmm(experts.unsqueeze(1), hidden_states_list.reshape(hsl_0, hsl_1, hsl_2*hsl_3)).reshape(hsl_0, hsl_2, hsl_3)
+
+    if self.topic_adapter is not None:
+    hidden_states = self.topic_adapter(hidden_states)
+```
