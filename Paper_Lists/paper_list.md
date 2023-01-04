@@ -40,3 +40,43 @@ https://arxiv.org/pdf/2104.02096.pdf
 #### EfficientVLM: Fast and Accurate Vision-Language Models via Knowledge Distillation and Modal-adaptive Pruning
 https://arxiv.org/pdf/2210.07795.pdf    
 20230102_p9
+
+#### Increasing faithfulness in knowledge-grounded dialogue with controllable features
+https://arxiv.org/pdf/2107.06963.pdf    
+20230103_p1
+
+#### Retrieval-Free Knowledge-Grounded Dialogue Response Generation with Adapters
+https://arxiv.org/pdf/2105.06232.pdf      
+20230103_p2
+
+#### Generate, Discriminate and Contrast: A Semi-Supervised Sentence Representation Learning Framework
+https://arxiv.org/pdf/2210.16798.pdf      
+20230103_p3
+
+#### Contrastive Learning with Prompt-derived Virtual Semantic Prototypes for Unsupervised Sentence Embedding
+https://arxiv.org/pdf/2211.03348.pdf      
+20230103_p4
+
+#### Ranking-Enhanced Unsupervised Sentence Representation Learning
+https://arxiv.org/pdf/2209.04333.pdf      
+20230103_p5
+
+#### Decoupled Knowledge Distillation
+https://arxiv.org/pdf/2203.08679.pdf      
+20230104_p1
+
+#### Knowledge distillation: A good teacher is patient and consistent
+https://arxiv.org/pdf/2106.05237.pdf      
+20230104_p2
+
+#### GENERATING SEQUENCES BY LEARNING TO SELF-CORRECT
+https://arxiv.org/pdf/2211.00053.pdf      
+20230104_p3
+
+#### Crossing Variational Autoencoders for Answer Retrieval
+https://arxiv.org/pdf/2005.02557.pdf      
+20230104_p4
+
+#### Enhancing Dual-Encoders with Question and Answer Cross-Embeddings for Answer Retrieval
+https://arxiv.org/pdf/2206.02978.pdf      
+20230104_p5
