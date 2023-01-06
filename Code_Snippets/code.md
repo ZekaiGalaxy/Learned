@@ -484,3 +484,33 @@ if self.kadapter is not None:
     if self.topic_adapter is not None:
     hidden_states = self.topic_adapter(hidden_states)
 ```
+
+# MIST : Multi-modal Iterative Spatial-Temporal Transformer for Long-form Video Question Answering
+
+### gumbel softmax topk : continuous topk
+```
+eps = 1e-20
+  
+def gumbel(logits):
+	"""Draw a sample from the Gumbel-Softmax distribution."""
+	u = torch.rand(logits.shape)
+	z = -torch.log(-torch.log(u+eps)+eps)
+	return logits + z
+	
+def topk_sample(logits, k=0, t=0.):
+	logits = gumbel(logits)
+	khot = torch.zeros(logits.shape)
+	onehot_approx = torch.zeros(logits)
+	
+	# every time do gumbel softmax, mask the selected, continue
+	for i in range(k):
+		mask = torch.max(1.0-onehot_approx, eps)
+		logits += torch.log(mask)
+		onehot_approx = torch.nn.softmax(logits / t, dim=-1)
+		khot = khot + onehot_approx
+		
+	return khot
+
+logits = torch.nn.log_softmax(torch.random.normal([2, 10])) 
+soft_mask = topk_sample(logits, k=3, t=0.1)
+```
