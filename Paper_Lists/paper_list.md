@@ -105,68 +105,64 @@ https://arxiv.org/pdf/2010.14557.pdf
 https://arxiv.org/pdf/2205.04093.pdf        
 20230105_p6
 
-# Natural Logic-guided Autoregressive Multi-hop Document Retrieval for Fact Verification
+#### Natural Logic-guided Autoregressive Multi-hop Document Retrieval for Fact Verification
 https://arxiv.org/pdf/2212.05276.pdf
 20230106_p1
 
-# MIST : Multi-modal Iterative Spatial-Temporal Transformer for Long-form Video Question Answering
-https://arxiv.org/pdf/2212.09522.pdf
+#### MIST : Multi-modal Iterative Spatial-Temporal Transformer for Long-form Video Question Answering
+https://arxiv.org/pdf/2212.09522.pdf    
 20230106_p2
 
-# LEARNING MULTIMODAL DATA AUGMENTATION IN FEATURE SPACE
-https://arxiv.org/pdf/2212.14453.pdf
+#### LEARNING MULTIMODAL DATA AUGMENTATION IN FEATURE SPACE
+https://arxiv.org/pdf/2212.14453.pdf    
 20230107_p1
 
-# Topic Segmentation Model Focusing on Local Context
-https://arxiv.org/pdf/2301.01935v1.pdf
+#### Topic Segmentation Model Focusing on Local Context
+https://arxiv.org/pdf/2301.01935v1.pdf    
 20230107_p2
 
-# PARAMETER-EFFICIENT FINE-TUNING DESIGN SPACES
-https://d2l-webdata.s3.us-west-2.amazonaws.com/papers/PEFT-design-spaces.pdf
-20230105_p6
-
-# Transformer Feed-Forward Layers Build Predictions by Promoting Concepts in the Vocabulary Space
-https://arxiv.org/pdf/2203.14680.pdf
+#### Transformer Feed-Forward Layers Build Predictions by Promoting Concepts in the Vocabulary Space
+https://arxiv.org/pdf/2203.14680.pdf    
 20230108_p1
 
-# The Importance of Being Parameters: An Intra-Distillation Method for Serious Gains
-https://arxiv.org/pdf/2205.11416.pdf
+#### The Importance of Being Parameters: An Intra-Distillation Method for Serious Gains
+https://arxiv.org/pdf/2205.11416.pdf    
 20230108_p2
 
-# Interpreting Language Models with Contrastive Explanations
-https://arxiv.org/pdf/2202.10419.pdf
+#### Interpreting Language Models with Contrastive Explanations
+https://arxiv.org/pdf/2202.10419.pdf    
 20230108_p3
 
-# Linearizing Transformer with Key-Value Memory
-https://arxiv.org/pdf/2203.12644.pdf
+#### Linearizing Transformer with Key-Value Memory
+https://arxiv.org/pdf/2203.12644.pdf    
 20230109_p1
 
-# HYDRASUM: Disentangling Style Features in Text Summarization with Multi-Decoder Models
-https://arxiv.org/pdf/2110.04400.pdf
+#### HYDRASUM: Disentangling Style Features in Text Summarization with Multi-Decoder Models
+https://arxiv.org/pdf/2110.04400.pdf    
 20230109_p2
 
-# A Unified Encoder-Decoder Framework with Entity Memory
-https://arxiv.org/pdf/2210.03273.pdf
+#### A Unified Encoder-Decoder Framework with Entity Memory
+https://arxiv.org/pdf/2210.03273.pdf    
 20230109_p3
 
-# Fine-grained Contrastive Learning for Relation Extraction
-https://arxiv.org/pdf/2205.12491.pdf
+#### Fine-grained Contrastive Learning for Relation Extraction
+https://arxiv.org/pdf/2205.12491.pdf    
 20230110_p1
 
-# Curriculum Prompt Learning with Self-Training for Abstractive Dialogue Summarization
-http://gerard.demelo.org/papers/dialogue-summarization.pdf
+#### Curriculum Prompt Learning with Self-Training for Abstractive Dialogue Summarization
+http://gerard.demelo.org/papers/dialogue-summarization.pdf    
 20230110_p2
 
-# Multilingual Machine Translation with Hyper-Adapters
-https://arxiv.org/pdf/2205.10835.pdf
+#### Multilingual Machine Translation with Hyper-Adapters
+https://arxiv.org/pdf/2205.10835.pdf    
 20230110_p3
 
-# On the Transformation of Latent Space in Fine-Tuned NLP Models
-https://arxiv.org/pdf/2210.12696.pdf
+#### On the Transformation of Latent Space in Fine-Tuned NLP Models
+https://arxiv.org/pdf/2210.12696.pdf    
 20230110_p4
 
-# Retrieval as Attention: End-to-end Learning of Retrieval and Reading within a Single Transformer
-https://arxiv.org/pdf/2212.02027.pdf
+#### Retrieval as Attention: End-to-end Learning of Retrieval and Reading within a Single Transformer
+https://arxiv.org/pdf/2212.02027.pdf    
 20230110_p5
 
 
