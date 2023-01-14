@@ -165,4 +165,97 @@ https://arxiv.org/pdf/2210.12696.pdf
 https://arxiv.org/pdf/2212.02027.pdf    
 20230110_p5
 
+#### Sentence Representation Learning with Generative Objective rather than Contrastive Objective
+https://arxiv.org/pdf/2210.08474.pdf    
+20230111_p1
+
+#### A Contrastive Framework for Learning Sentence Representations from Pairwise and Triple-wise Perspective in Angular Space
+https://aclanthology.org/2022.acl-long.336v2.pdf    
+20230111_p2
+
+#### A Model-Agnostic Data Manipulation Method for Persona-based Dialogue Generation
+https://arxiv.org/pdf/2204.09867.pdf    
+20230111_p3
+
+#### A Token-level Reference-free Hallucination Detection Benchmark for Free-form Text Generation
+https://arxiv.org/pdf/2104.08704.pdf    
+20230111_p4
+
+#### ABC: Attention with Bounded-Memory Control
+https://arxiv.org/pdf/2110.02488.pdf    
+20230111_p5
+
+#### Achieving Conversational Goals with Unsupervised Post-hoc Knowledge Injection
+https://arxiv.org/pdf/2203.11399.pdf    
+20230111_p6
+
+#### Adapting Coreference Resolution Models through Active Learning
+https://aclanthology.org/2022.acl-long.519.pdf    
+20230111_p7
+
+#### An Effective and Efficient Entity Alignment Decoding Algorithm via Third-Order Tensor Isomorphism
+https://aclanthology.org/2022.acl-long.405.pdf    
+20230111_p8
+
+#### Answer-level Calibration for Free-form Multiple Choice Question Answering
+https://aclanthology.org/2022.acl-long.49.pdf   
+20230112_p1
+
+#### Answering Open-Domain Multi-Answer Questions via a Recall-then-Verify Framework
+https://aclanthology.org/2022.acl-long.128.pdf    
+20230112_p2
+
+#### Attention Temperature Matters in Abstractive Summarization Distillation
+https://arxiv.org/pdf/2106.03441.pdf    
+20230112_p3
+
+#### CAKE: A Scalable Commonsense-Aware Framework For Multi-View Knowledge Graph Completion
+https://arxiv.org/pdf/2202.13785.pdf    
+20230112_p4
+
+#### ADAM: Dense Retrieval Distillation with Adaptive Dark Examples
+https://arxiv.org/pdf/2212.10192.pdf    
+20230113_p1
+
+#### Neural Machine Translation with Contrastive Translation Memories
+https://arxiv.org/pdf/2212.03140.pdf    
+20230113_p2
+
+#### Keywords and Instances: A Hierarchical Contrastive Learning Framework Unifying Hybrid Granularities for Text Generation
+https://arxiv.org/pdf/2205.13346.pdf    
+20230113_p3
+
+#### Finding the Dominant Winning Ticket in Pre-Trained Language Models
+https://aclanthology.org/2022.findings-acl.115.pdf    
+20230113_p4
+
+#### ProphetChat: Enhancing Dialogue Generation with Simulation of Future Conversation
+https://aclanthology.org/2022.acl-long.68.pdf   
+20230113_p5
+
+#### Multi-Granularity Structural Knowledge Distillation for Language Model Compression
+https://aclanthology.org/2022.acl-long.71.pdf   
+20230113_p6
+
+#### Learning to Express in Knowledge-Grounded Conversation
+https://arxiv.org/pdf/2204.05805.pdf    
+20230114_p1
+
+#### Things not Written in Text: Exploring Spatial Commonsense from Visual Signals
+https://arxiv.org/pdf/2203.08075.pdf    
+20230114_p2
+
+#### GNN-encoder: Learning a Dual-encoder Architecture via Graph Neural Networks for Dense Passage Retrieval
+https://arxiv.org/pdf/2204.08241.pdf    
+20230114_p3
+
+#### Combining Curriculum Learning and Knowledge Distillation for Dialogue Generation
+https://aclanthology.org/2021.findings-emnlp.111.pdf    
+20230114_p4
+
+#### Enhancing the Open-Domain Dialogue Evaluation in Latent Space
+https://aclanthology.org/2021.findings-acl.432.pdf    
+20230114_p5
+
+
 
