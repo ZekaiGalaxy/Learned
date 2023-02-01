@@ -1,0 +1,10 @@
+# 整理一下optimizer和scheduler
+对于transformer而言，最好的就是Adam或者AdamW，
+因为NLP任务loss很多都是悬崖峭壁，所以我们需要自适应，所以我们需要gradient clipping
+而scheduler的话，我们需要有warmup的
+try this:
+t_total = len(train_s1_loader) * args.n_epoch
+p2r_optimizer = AdamW(p2r_model.parameters(), lr=args.p2r_lr, eps=args.adam_epsilon)
+Adam or AdamW
+Adamw 即 Adam + weight decay，可以考虑光用AdamW或者Adam+scheduler
+p2r_scheduler = get_linear_schedule_with_warmup(p2r_optimizer, num_warmup_steps=0, num_training_steps=t_total)
