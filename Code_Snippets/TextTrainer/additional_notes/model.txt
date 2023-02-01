@@ -1,0 +1,458 @@
+-----------------------------------------------------------------
+BartAttention
+参数
+k_proj
+v_proj
+q_proj
+out_proj
+
+输入
+hidden_states: 用在encoder的qkv，或者decoder中的q
+key_value_states: 用在decoder的cross attn，相当于encoder hidden
+past_key_value: 
+    0,1 for self attention key&value
+    2,3 for cross attention key&value
+attention_mask: 
+layer_head_mask: 每个layer都有head_mask，是否要mask某个head
+output_attentions:
+
+过程
+# q
+    hidden states: [B,L,d]
+# k,v
+    # cross; past
+    use past_key_value 0,1
+    # cross; no past
+    proj key_value_states
+    # self; past
+    use hidden
+    update past
+    这是因为我们只在decoder的时候用到这个，所以需要在self attention的时候update
+    在encoder的时候我们根本不会传入past_key_value
+    # self; no past
+    proj hidden
+q,k,v -> [B*N_head,L,d_head]
+attn_weights [B*N_head,L,L]
+attn_mask [B,1,L,L] 
+attn_weights += attn_mask
+attn_weights *= layer_head_mask.view(1,-1,1,1)
+dropout
+attn_output [B,L,N_head,d_head]
+outproj(reshape(B,L,d))
+
+输出
+attn_output
+attn_weights_reshaped [B,N_head,L,L]
+past_key_value
+-----------------------------------------------------------------
+BartEncoderLayer
+参数
+self_attn(is_decoder=False)
+fc1
+fc2
+self_attn_layer_norm
+final_layer_norm
+没有past_key_value，那个只在decoder的时候用到！！！
+
+输入
+hidden_states
+attention_mask
+layer_head_mask
+output_attentions
+
+过程
+residual = hidden_states
+self_attn
+dropout
+hidden_states = residual + hidden_states
+self_attn_layer_norm
+residual = hidden_states
+activate(fc1)
+dropout
+fc2
+dropout
+residual + hidden_states
+final_layer_norm
+
+输出
+hidden_states, attn_weights
+-----------------------------------------------------------------
+BartDecoderLayer
+参数
+self_attn(is_decoder=True)
+dropout
+encoder_attn(is_decoder=True)
+fc1
+fc2
+encoder_attn_layer_norm
+final_layer_norm
+
+输入
+hidden_states: 输入decoder的hidden states
+attention_mask
+encoder_hidden_states: encoder的hidden states
+encoder_attention_mask
+layer_head_mask
+cross_attn_layer_head_mask
+past_key_value
+output_attentions
+use_cache
+
+过程
+# self
+residual = hidden_states
+self_attn_past_key_value = past_key_value[:2]
+hidden_states, present_key_value = self_attn
+dropout
+hidden_states = residual + hidden_states
+self_attn_layer_norm
+
+# cross 
+residual = hidden_states
+cross_attn_past_key_value = past_key_value[-2:]
+hidden_states, cross_attn_present_key_value = encoder_attn
+dropout
+hidden_states = residual + hidden_states
+encoder_attn_layer_norm
+present_key_value = present_key_value + cross_attn_present_key_value
+
+# fc
+residual = hidden_states
+activate(fc1)
+dropout
+fc2
+dropout
+residual + hidden_states
+final_layer_norm
+
+输出
+hidden_states, self_attn_weights, cross_attn_weights, present_key_value
+-----------------------------------------------------------------
+BartClassificationHead
+参数
+dense
+out_proj
+
+输入
+hidden
+
+过程
+dropout
+tanh(dense)
+dropout
+out_proj
+
+输出
+hidden
+-----------------------------------------------------------------
+BartEncoder
+参数
+embed_tokens
+embed_positions
+layers = nn.ModuleList[BartEncoderLayer]
+layernorm_embedding
+
+输入
+input_ids
+attention_mask
+head_mask
+inputs_embeds
+output_attentions
+output_hidden_states
+return_dict
+
+过程
+input_embeds = embed_tokens(input_ids)
+embed_pos = embed_positions
+hidden_states = inputs_embeds + embed_pos
+layernorm_embedding
+dropout
+attention_mask [B,L]->[B,1,L,L]
+for idx, encoder_layer in enumerate(self.layers):
+    layer_outputs = encoder_layer
+    hidden_states = layer_outputs[0]
+    all_attentions = all_attentions + (layer_outputs[1],)
+    encoder_states = encoder_states + (hidden_states,)
+
+输出
+BaseModelOutput(
+    last_hidden_state=hidden_states, hidden_states=encoder_states, attentions=all_attentions
+)
+-----------------------------------------------------------------
+BartDecoder
+参数
+embed_tokens
+embed_positions
+layers = nn.ModuleList[BartDecoderLayer]
+layernorm_embedding
+
+输入
+input_ids: decoder的input_ids
+attention_mask: decoder的attention_mask
+encoder_hidden_states
+encoder_attention_mask
+head_mask
+cross_attn_head_mask
+past_key_values 2个或者4个，前两个是给self attn两个是给cross attn
+    [B,N_head,L,d_head11111]
+inputs_embeds
+use_cache
+output_attentions
+output_hidden_states
+return_dict
+
+过程
+inputs_embeds = embed_tokens
+attention_mask
+encoder_attention_mask
+positions = embed_positions
+hidden_states = inputs_embeds + positions
+layernorm_embedding
+dropout
+for idx, decoder_layer in enumerate(self.layers):
+    past_key_value = past_key_values[idx]
+    layer_outputs = decoder_layer
+    hidden_states = layer_outputs[0]
+    next_decoder_cache += (layer_outputs[3 if output_attentions else 1],)
+    all_self_attns += (layer_outputs[1],)
+    all_cross_attentions += (layer_outputs[2],)
+    all_hidden_states += (hidden_states,)
+    next_cache = next_decoder_cache
+
+输出
+BaseModelOutputWithPastAndCrossAttentions(
+    last_hidden_state=hidden_states,
+    past_key_values=next_cache,
+    hidden_states=all_hidden_states,
+    attentions=all_self_attns,
+    cross_attentions=all_cross_attentions,
+)
+-----------------------------------------------------------------
+BartModel
+参数
+shared = nn.Embedding
+encoder(shared)
+decoder(shared)
+
+输入
+input_ids
+attention_mask
+decoder_input_ids
+decoder_attention_mask
+head_mask
+decoder_head_mask
+cross_attn_head_mask
+encoder_outputs
+past_key_values
+inputs_embeds
+decoder_inputs_embeds
+use_cache
+output_attentions
+output_hidden_states
+return_dict
+
+过程
+if decoder_input_ids is None:
+    decoder_input_ids = shift_tokens_right(input_ids)
+encoder_outputs = encoder(
+    input_ids=input_ids,
+    attention_mask=attention_mask,
+    head_mask=head_mask,
+)
+decoder_outputs = decoder(
+    input_ids=decoder_input_ids,
+    attention_mask=decoder_attention_mask,
+    encoder_hidden_states=encoder_outputs[0],
+    encoder_attention_mask=attention_mask,
+    head_mask=decoder_head_mask,
+    cross_attn_head_mask=cross_attn_head_mask,
+    past_key_values=past_key_values,
+)
+
+输出
+Seq2SeqModelOutput(
+    last_hidden_state=decoder_outputs.last_hidden_state,
+    past_key_values=decoder_outputs.past_key_values,
+    decoder_hidden_states=decoder_outputs.hidden_states,
+    decoder_attentions=decoder_outputs.attentions,
+    cross_attentions=decoder_outputs.cross_attentions,
+    encoder_last_hidden_state=encoder_outputs.last_hidden_state,
+    encoder_hidden_states=encoder_outputs.hidden_states,
+    encoder_attentions=encoder_outputs.attentions,
+)
+-----------------------------------------------------------------
+BartForConditionalGeneration
+参数
+lm_head
+
+输入
+labels
+
+过程
+decoder_input_ids = shift_tokens_right(labels)
+lm_logits = lm_head(outputs[0])
+masked_lm_loss
+
+输出
+Seq2SeqLMOutput(
+    loss=masked_lm_loss,
+    logits=lm_logits,
+    past_key_values=outputs.past_key_values,
+    decoder_hidden_states=outputs.decoder_hidden_states,
+    decoder_attentions=outputs.decoder_attentions,
+    cross_attentions=outputs.cross_attentions,
+    encoder_last_hidden_state=outputs.encoder_last_hidden_state,
+    encoder_hidden_states=outputs.encoder_hidden_states,
+    encoder_attentions=outputs.encoder_attentions,
+)
+-----------------------------------------------------------------
+BartForSequenceClassification
+参数
+classification_head
+
+输入
+labels
+
+过程
+eos_mask
+sentence_representation = eos
+logits = classification_head(sentence_representation)
+
+输出
+Seq2SeqSequenceClassifierOutput(
+    loss=loss,
+    logits=logits,
+    past_key_values=outputs.past_key_values,
+    decoder_hidden_states=outputs.decoder_hidden_states,
+    decoder_attentions=outputs.decoder_attentions,
+    cross_attentions=outputs.cross_attentions,
+    encoder_last_hidden_state=outputs.encoder_last_hidden_state,
+    encoder_hidden_states=outputs.encoder_hidden_states,
+    encoder_attentions=outputs.encoder_attentions,
+)
+-----------------------------------------------------------------
+BartForCausalLM
+参数
+model = Decoder
+lm_head
+is_decoder = True
+is_encoder_decoder = False
+
+输入
+input_ids
+attention_mask
+encoder_hidden_states
+encoder_attention_mask
+labels
+没有decoder_input_ids和mask
+
+过程
+outputs = decoder
+logits = lm_head(outputs[0])
+
+输出
+CausalLMOutputWithCrossAttentions(
+    loss=loss,
+    logits=logits,
+    past_key_values=outputs.past_key_values,
+    hidden_states=outputs.hidden_states,
+    attentions=outputs.attentions,
+    cross_attentions=outputs.cross_attentions,
+)
+-----------------------------------------------------------------
+BartForQuestionAnswering
+参数
+qa_outputs: h->2
+
+输入
+start_positions
+end_positions
+
+过程
+sequence_output = outputs[0]
+logits = qa_outputs(sequence_output)
+start_logits, end_logits = logits.split
+start_loss, end_loss
+
+输出
+Seq2SeqQuestionAnsweringModelOutput(
+    loss=total_loss,
+    start_logits=start_logits,
+    end_logits=end_logits,
+    past_key_values=outputs.past_key_values,
+    decoder_hidden_states=outputs.decoder_hidden_states,
+    decoder_attentions=outputs.decoder_attentions,
+    cross_attentions=outputs.cross_attentions,
+    encoder_last_hidden_state=outputs.encoder_last_hidden_state,
+    encoder_hidden_states=outputs.encoder_hidden_states,
+    encoder_attentions=outputs.encoder_attentions,
+)
+-----------------------------------------------------------------
+Generate
+主要修改两个地方，第一个是输入模型，需要准备参数，要考虑beam的情况
+第二个是generate mode
+kwargs
+
+原来模型的实现
+-----------------------------------------------------------------
+    # 4. Define other model kwargs
+    model_kwargs["output_attentions"] 
+    model_kwargs["output_hidden_states"] 
+    model_kwargs["use_cache"] 
+    model_kwargs["attention_mask"] = input_ids.ne(pad_token_id).long()
+
+    encoder = self.get_encoder()
+    encoder_kwargs = {
+        argument: value for argument, value in model_kwargs.items() if not argument.startswith("decoder_")
+    }
+    model_kwargs["encoder_outputs"] = encoder(input_ids, return_dict=True, **encoder_kwargs)
+
+    if "decoder_input_ids" in model_kwargs:
+        input_ids = model_kwargs["decoder_input_ids"]
+    else:
+        decoder_start_token_id = self._get_decoder_start_token_id(decoder_start_token_id, bos_token_id)
+        input_ids = torch.ones((input_ids.shape[0], 1), dtype=input_ids.dtype, device=input_ids.device)
+            * decoder_start_token_id
+
+    # _expand_inputs_for_generation
+
+    expanded_return_idx = (
+        torch.arange(input_ids.shape[0]).view(-1, 1).repeat(1, expand_size).view(-1).to(input_ids.device)
+    )
+    input_ids = input_ids.index_select(0, expanded_return_idx)
+
+    if "token_type_ids" in model_kwargs:
+        token_type_ids = model_kwargs["token_type_ids"]
+        model_kwargs["token_type_ids"] = token_type_ids.index_select(0, expanded_return_idx)
+
+    if attention_mask is not None:
+        model_kwargs["attention_mask"] = attention_mask.index_select(0, expanded_return_idx)
+
+    encoder_outputs["last_hidden_state"] = encoder_outputs.last_hidden_state.index_select(
+        0, expanded_return_idx.to(encoder_outputs.last_hidden_state.device)
+    )
+    model_kwargs["encoder_outputs"] = encoder_outputs
+-----------------------------------------------------------------
+其实我们需要的只有model_kwargs["encoder_outputs"]
+前面的东西我们都能自己写
+但是我们也需要实现一下_expand_inputs_for_generation
+
+    def get_encoder_outputs(
+        input_ids,
+        attention_mask
+    ) -> encoder_outputs
+
+    # expand
+    expanded_return_idx = (
+        torch.arange(input_ids.shape[0]).view(-1, 1).repeat(1, expand_size).view(-1).to(input_ids.device)
+    )
+    input_ids, attention_mask 
+    encoder_outputs
+    .index_select(0, expanded_return_idx)
+-----------------------------------------------------------------
+
+
+
+
+
+
